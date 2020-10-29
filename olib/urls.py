@@ -25,4 +25,5 @@ def get_app_urls(appname):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(get_app_urls('users'))),
+    path('', include(get_app_urls('libraries'))),
 ]

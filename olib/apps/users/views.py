@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from olib.apps.users.serializers import UserSerializer
 
 
-class User(generics.CreateAPIView):
+class UserView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
