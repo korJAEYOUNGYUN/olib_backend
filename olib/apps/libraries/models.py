@@ -1,7 +1,5 @@
 from django.db import models
 
-# Todo: 도서관 모델과 책 모델 필요, 도서관 모델은 책 모델과 일대다 관계, 책 모델의 pk에 도서관 id도 포함
-
 
 class Library(models.Model):
     """ describes a library
@@ -12,6 +10,9 @@ class Library(models.Model):
 
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
+
+    def __str__(self):
+        return '%d:%s' % (self.id, self.name)
 
 
 class Book(models.Model):
@@ -24,10 +25,9 @@ class Book(models.Model):
 
     library = models.ForeignKey("Library", on_delete=models.CASCADE)
     location = models.CharField(max_length=255)
-    isbn = models.CharField(max_length=255)
     is_available = models.BooleanField(default=True)
     book_info = models.ForeignKey("BookInfo", on_delete=models.CASCADE)
-    due = models.DateField
+    due = models.DateField(null=True, blank=True)
 
 
 class BookInfo(models.Model):
@@ -44,3 +44,5 @@ class BookInfo(models.Model):
     published_year = models.CharField(max_length=10)
     category = models.CharField(max_length=255)
 
+    def __str__(self):
+        return '%d:%s' % (self.id, self.title)
