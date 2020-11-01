@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from .serializers import BookSerializer, LibrarySerializer, BookInfoSerializer
 from .models import Book, Library, BookInfo
@@ -7,7 +8,6 @@ from .models import Book, Library, BookInfo
 
 class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
-    permission_classes = []
 
     def get_queryset(self):
         books = Book.objects.all()
@@ -31,13 +31,36 @@ class BookViewSet(viewsets.ModelViewSet):
 
         return books
 
+    def get_permissions(self):
+        if self.action == 'list' or self.action == 'retrieve' or self.action == 'update':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAdminUser]
+
+        return [permission() for permission in permission_classes]
+
 
 class LibraryViewSet(viewsets.ModelViewSet):
     queryset = Library.objects.all()
     serializer_class = LibrarySerializer
-    permission_classes = []
+
+    def get_permissions(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAdminUser]
+
+        return [permission() for permission in permission_classes]
 
 
 class BookInfoViewSet(viewsets.ModelViewSet):
     queryset = BookInfo.objects.all()
     serializer_class = BookInfoSerializer
+
+    def get_permissions(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAdminUser]
+
+        return [permission() for permission in permission_classes]
