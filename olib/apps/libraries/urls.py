@@ -10,5 +10,5 @@ router.register('books', views.BookViewSet, basename='book')
 router.register('bookinfos', views.BookInfoViewSet)
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('api/', include(router.urls))
 ]
