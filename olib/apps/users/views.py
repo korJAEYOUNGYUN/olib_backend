@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User as UserModel
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from olib.apps.users.serializers import UserSerializer
+from olib.apps.users.models import Borrowing
+from olib.apps.users.serializers import UserSerializer, BorrowingSerializer
 
 
 class UserView(generics.CreateAPIView):
@@ -27,3 +29,28 @@ class UserView(generics.CreateAPIView):
             'refresh': str(refresh),
             'access': str(refresh.access_token)
         }
+
+
+class BorrowingViewSet(viewsets.ModelViewSet):
+    serializer_class = BorrowingSerializer
+
+    def get_queryset(self):
+        borrowings = Borrowing.objects.all()
+
+        user = self.request.query_params.get('user')
+        is_returned = self.request.query_params.get('is_returned')
+
+        if user:
+            borrowings = borrowings.filter(user_id=user)
+        if is_returned:
+            borrowings = borrowings.filter(is_returned=is_returned)
+
+        return borrowings
+
+    def get_permissions(self):
+        if self.action == 'list' or self.action == 'retrieve' or self.action == 'partial_update':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAdminUser]
+
+        return [permission() for permission in permission_classes]

@@ -27,7 +27,6 @@ class Book(models.Model):
     location = models.CharField(max_length=255)
     is_available = models.BooleanField(default=True)
     book_info = models.ForeignKey("BookInfo", on_delete=models.CASCADE)
-    due = models.DateField(null=True, blank=True)
 
 
 class BookInfo(models.Model):
