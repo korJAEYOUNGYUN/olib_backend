@@ -48,7 +48,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         return borrowings
 
     def get_permissions(self):
-        if self.action == 'list' or self.action == 'retrieve' or self.action == 'partial_update':
+        if self.action == 'list' or self.action == 'create' or self.action == 'partial_update':
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAdminUser]
