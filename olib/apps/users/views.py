@@ -43,7 +43,10 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         if user:
             borrowings = borrowings.filter(user_id=user)
         if is_returned:
-            borrowings = borrowings.filter(is_returned=is_returned)
+            if is_returned.lower() == "false":
+                borrowings = borrowings.filter(is_returned=False)
+            else:
+                borrowings = borrowings.filter(is_returned=True)
 
         return borrowings
 
